@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
 using WinAlBackup.Models;
 
 namespace WinAlBackup.Controllers
@@ -180,18 +179,6 @@ namespace WinAlBackup.Controllers
                 string completeFileName = Path.Combine(destinationDirectoryName, file.FullName);
                 string directory = Path.GetDirectoryName(completeFileName);
 
-                if (copyEvents && file.FullName.Contains(EventsDbFileName))
-                {
-                    file.ExtractToFile(EventsDbPath, true);
-                    continue;
-                }
-
-                if (copyVoices && file.FullName.Contains(VoicesDbFileName))
-                {
-                    file.ExtractToFile(VoicesDbPath, true);
-                    continue;
-                }
-
                 if (file.FullName.Contains(RegionMapFileName))
                 {
                     file.ExtractToFile(RegionMapPath, true);
@@ -204,13 +191,27 @@ namespace WinAlBackup.Controllers
                     continue;
                 }
 
-                if (file.FullName.Contains("Nastr") || file.FullName.Contains("Nastr"))
+                if (file.FullName.Contains("Nastr"))
                 {
                     if (!Directory.Exists(directory))
                         Directory.CreateDirectory(directory);
 
                     if (file.Name != "")
                         file.ExtractToFile(completeFileName, true);
+
+                    continue;
+                }
+
+                if (copyEvents && file.FullName.Contains(EventsDbFileName))
+                {
+                    file.ExtractToFile(EventsDbPath, true);
+                    continue;
+                }
+
+                if (copyVoices && file.FullName.Contains(VoicesDbFileName))
+                {
+                    file.ExtractToFile(VoicesDbPath, true);
+                    continue;
                 }
             }
         }
